@@ -1,6 +1,5 @@
 import realm from "./realm";
 
-
 /**
  * Gets today's info. Creates the day object if it didn't exist, using yesterday's goal (if that exists)
  * @returns Today's current food, weight, and the current day (goal and date)
@@ -27,6 +26,65 @@ const getToday = () => {
   }
 
   return result;
+}
+
+/**
+ * Returns an object with the given date's data (results may be null, you should check for that before blindly using)
+ * @param {*} _date Date to get info for
+ * @returns Object
+ */
+const getAllByDate = (_date) => {
+  _date.setHours(0, 0, 0, 0);
+
+  let result = {}
+
+  result.food = realm.objects('Food').filtered("date = $0", today);
+  result.weight = realm.objects('Weight').filtered("date = $0", today);
+  result.day = realm.objects('Day').filtered("date = $0", today);
+
+  return result;
+}
+
+/**
+ * Adds a food item for a given date
+ */
+const addFood = (_name, _calories, _category) => {
+  let today = new Date().setHours(0, 0, 0, 0);
+
+  realm.write(() => {
+    const addedFood = realm.create('Food', {
+      date: today,
+      name: _name,
+      calories: _calories,
+      category: _category,
+    })
+  })
+}
+
+/**
+ * Modifies the current date's goal
+ */
+const changeToday = (_goal) => {
+  let today = new Date();
+  today.setDate(0, 0, 0, 0);
+  let result = realm.objects('Day').filtered("date = $0", today);
+  if (!result.length){
+    const yesterday = realm.objects('Day').filtered("date = $0", new Date().setDate(today.getDate() - 1));
+    realm.write(() => {
+      const day = realm.create('Day', {
+        date: today,
+        goal: yesterday.length ? yesterday[0].goal : 2000,
+      })
+      result = day;
+    })
+  }
+  else{
+    result = result[0];
+  }
+
+  realm.write(() => {
+    result.goal = _goal;
+  })
 }
 
 /**
@@ -63,4 +121,10 @@ const getStatusByDate = (_date) => {
   return {status: 'under'};
 }
 
-export { getToday, getStatusByDate }
+export {
+  getToday,
+  getStatusByDate,
+  getAllByDate,
+  changeToday,
+  addFood,
+}
