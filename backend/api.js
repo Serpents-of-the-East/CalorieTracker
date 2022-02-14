@@ -15,14 +15,20 @@ const getToday = () => {
   result.day = realm.objects('Day').filtered("date = $0", today);
 
   if (!result.day.length){
-    const yesterday = realm.objects('Day').filtered("date = $0", new Date().setDate(today.getDate() - 1));
+    let yesterdayDate = new Date();
+    yesterdayDate.setDate(today.getDate() - 1)
+
+    const yesterday = realm.objects('Day').filtered("date = $0", yesterdayDate);
     realm.write(() => {
       const day = realm.create('Day', {
         date: today,
         goal: yesterday.length ? yesterday[0].goal : 2000,
       })
-      result.day = [day]
+      result.day = day
     })
+  }
+  else{
+    result.day = result.day[0]
   }
 
   return result;
@@ -69,7 +75,9 @@ const changeToday = (_goal) => {
   today.setDate(0, 0, 0, 0);
   let result = realm.objects('Day').filtered("date = $0", today);
   if (!result.length){
-    const yesterday = realm.objects('Day').filtered("date = $0", new Date().setDate(today.getDate() - 1));
+    let yesterdayDate = new Date();
+    yesterdayDate.setDate(today.getDate() - 1)
+    const yesterday = realm.objects('Day').filtered("date = $0", yesterdayDate);
     realm.write(() => {
       const day = realm.create('Day', {
         date: today,

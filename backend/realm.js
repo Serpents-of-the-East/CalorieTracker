@@ -30,6 +30,8 @@ DaySchema.schema = {
   }
 }
 
+
+
 let realm = new Realm({schema: [FoodSchema, WeightSchema, DaySchema], schemaVersion: 1})
 
 export default realm;

@@ -64,7 +64,7 @@ const HomeScreen = () => {
 
       </ScrollView>
       
-
+      
 
       <View style={styles.ProgressBar}>
         <Progress.Bar progress={0.3} width = {(4 * Dimensions.get('window').width) / 5} height={20}/>
