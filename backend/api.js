@@ -72,7 +72,7 @@ const addFood = (_name, _calories, _category) => {
  */
 const changeToday = (_goal) => {
   let today = new Date();
-  today.setDate(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
   let result = realm.objects('Day').filtered("date = $0", today);
   if (!result.length){
     let yesterdayDate = new Date();

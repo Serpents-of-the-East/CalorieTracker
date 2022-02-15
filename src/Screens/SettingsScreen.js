@@ -10,6 +10,7 @@ const SettingsScreen = () => {
 
     const [today, setToday] = useState(getToday());
     const [calorieGoal, setCalorieGoal] = useState(today.day.goal)
+    const [todayCalorieGoal, setTodayCalorieGoal] = useState(today.day.goal)
     
     const styles = StyleSheet.create({
       input: {
@@ -25,6 +26,8 @@ const SettingsScreen = () => {
       },
       text: {
         color: isDarkMode ? 'white' : 'black',
+        fontSize: 32,
+        textAlign: 'center',
       }
     });
 
@@ -35,10 +38,10 @@ const SettingsScreen = () => {
     };
   return (
     <SafeAreaView style={[backgroundStyle, {height: '100%'}]}>
-      <Text style={{color: "white"}}>{calorieGoal}</Text>
+      <Text style={styles.text}>{todayCalorieGoal}</Text>
 
       <TextInput
-        value={calorieGoal}
+        value={calorieGoal.toString()}
         onChangeText={calorieGoal => setCalorieGoal(calorieGoal)}
         placeholder="Enter your calorie goal"  
         style={styles.input}
@@ -50,6 +53,8 @@ const SettingsScreen = () => {
           title="Save Settings"
           onPress={() => {
             console.log(today.day.goal);
+            console.log(calorieGoal);
+            setTodayCalorieGoal(calorieGoal)
             changeToday(Number.parseFloat(calorieGoal));
           }}
         />    
