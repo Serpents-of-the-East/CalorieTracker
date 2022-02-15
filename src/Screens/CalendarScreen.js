@@ -1,6 +1,8 @@
 import React from "react";
 import { Colors } from "react-native/Libraries/NewAppScreen";
-import { SafeAreaView, Text, useColorScheme } from "react-native";
+import { SafeAreaView, useColorScheme } from "react-native";
+import CalorieCalendar from "../Components/CalorieCalendar";
+
 
 const CalendarScreen = () => {
     const isDarkMode = useColorScheme() === 'dark';
@@ -10,7 +12,7 @@ const CalendarScreen = () => {
     };
   return (
     <SafeAreaView style={[backgroundStyle, {height: '100%'}]}>
-      <Text> Calendar Screen</Text>
+      <CalorieCalendar />
     </SafeAreaView>
   )
 }
