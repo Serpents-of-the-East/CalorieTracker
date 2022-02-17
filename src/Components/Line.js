@@ -5,7 +5,7 @@ const Line = () => {
     return (
         <View style={{
             height: 1,
-            backgroundColor: 'rgba(255, 255, 255 ,0.3)',
+            backgroundColor: 'rgba(255, 255, 255, 0.6)',
             alignSelf: 'stretch'
         }} />
     )

@@ -8,11 +8,16 @@ import Line from "../Components/Line";
 import { getTodaySpecificFood } from "../../backend/api";
 import PlaceholderCalorieView from "../Components/PlaceholderCalorieView";
 import { useEffect } from "react";
+import { Swipeable } from "react-native-gesture-handler";
 
 
 
 const HomeScreen = () => {
     const isDarkMode = useColorScheme() === 'dark';
+    const CARD_WIDTH =  Dimensions.get('window').width * 0.85;
+    const CARD_HEIGHT = Dimensions.get('window').height * 0.7;
+    const SPACING_FOR_CARD_INSET = Dimensions.get('window').width * 0.1 - 10
+    
 
     const [breakfast, setBreakfast] = useState([]);
     const [lunch, setLunch] = useState([]);
@@ -38,65 +43,64 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={[backgroundStyle, {height: '100%'}]}>
       <View style={{flex: 4}}>
-        <ScrollView style={styles.ScrollViewStyle}>
-          <View style={styles.CommonViewStyling}>
-            <Text style={[isDarkMode ? styles.DarkFont : styles.LightFont, styles.title]}>Breakfast</Text>
-            {/* This is where we will pull from VM to find any Breakfast Foods */}
-            <>
-            {isLoading ? <></> : breakfast.length === 0 && <PlaceholderCalorieView/> ||
-            breakfast.length !== 0 && breakfast.map((food, index) => {
-              return (
-              <View key={index} style={{flexDirection: 'row'}}>
-                <Text style={[styles.name, isDarkMode ? styles.DarkFont : styles.LightFont, styles.foodName]}>{food.name}: </Text>
-                <Text style={isDarkMode ? styles.DarkFont : styles.LightFont}> {food.calories}</Text>
-              </View>
-              )
-          })}
-</>
-          </View>
+        <ScrollView 
+          horizontal={true} 
+          pagingEnabled={true}
+          scrollEnabled={true}
+          decelerationRate={0} 
+          snapToInterval={CARD_WIDTH + 10}
+          snapToAlignment='center'
+          contentInset={{
+            top: 0,
+            left: SPACING_FOR_CARD_INSET,
+            bottom: 0,
+            right: SPACING_FOR_CARD_INSET
+          }}
+          contentContainerStyle={{ // contentInset alternative for Android
+            paddingHorizontal: Platform.OS === 'android' ? SPACING_FOR_CARD_INSET : 0// Horizontal spacing before and after the ScrollView
+          }}
+          >
+          <View style={[styles.BreakfastCard, styles.CommonCard]}>
+            <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold', marginBottom: 8,}}> Breakfast </Text>
+            <ScrollView>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
+              <PlaceholderCalorieView/>
 
-          <Line/>
-
-          <View style={styles.CommonViewStyling}>
-            <Text style={[isDarkMode ? styles.DarkFont : styles.LightFont, styles.title]}>Lunch</Text>
-            {/* This is where we will pull from VM to find any Lunch Foods */}
-            <>
-            {lunch.length === 0  && <PlaceholderCalorieView/>}
-            </>
-
-
-
-          </View>
-          <Line/>
-
-
-
-          <View style={styles.CommonViewStyling}>
-            <Text style={[isDarkMode ? styles.DarkFont : styles.LightFont, styles.title]}>Dinner</Text>
-            {/* This is where we will pull from VM to find any Dinner Foods */}
-
-            <>
-            {dinner.length === 0  && <PlaceholderCalorieView/>}
-            </>
-
-          </View>
-          <Line/>
-
-
-          <View style={styles.CommonViewStyling}>
-            <Text style={[isDarkMode ? styles.DarkFont : styles.LightFont, styles.title]}>Snacks</Text>
-            {/* This is where we will pull from VM to find any snacks */}
-
-            <>
-            {snacks.length === 0  && <PlaceholderCalorieView/>}
-            </>
-
-          </View>
-          <Line/>
-
-
+            </ScrollView>
+          </View> 
+          <View style={[styles.LunchCard, styles.CommonCard]}>
+            <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold'}}> Lunch </Text>
+          </View> 
+          <View style={[styles.DinnerCard, styles.CommonCard]}>
+            <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold'}}> Dinner </Text>
+          </View> 
         </ScrollView>
-      </View> 
+      </View>
 
       <View style={[styles.ProgressBar, {flex: 0}]}>
         <Progress.Bar progress={0.3} width = {(4 * Dimensions.get('window').width) / 5} height={20}/>
@@ -108,6 +112,30 @@ const HomeScreen = () => {
 }
 
 const styles = StyleSheet.create({
+  CommonCard: {
+    flex: 1,
+    margin: 5,
+    padding: 8,
+    borderRadius: 15,
+    width: Dimensions.get('window').width * 0.85,
+    height: Dimensions.get('window').height * 0.7,
+  },
+
+
+  BreakfastCard: {
+
+    backgroundColor: '#FF7F7F',
+
+  },
+
+  LunchCard: {
+    backgroundColor: '#7f7fff',
+  },
+
+  DinnerCard: {
+    backgroundColor: '#ff7fff',
+  },
+
   ProgressBar: {
     alignSelf: 'center',
     alignItems: 'center',
