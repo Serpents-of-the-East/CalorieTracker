@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Colors } from "react-native/Libraries/NewAppScreen";
-import { SafeAreaView, Text, useColorScheme, View } from "react-native";
+import { Text, useColorScheme, View, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import * as Progress from 'react-native-progress';
-import { Dimensions, StyleSheet } from 'react-native';
-import { ScrollView } from "react-native-gesture-handler";
+import { Dimensions, StyleSheet, } from 'react-native';
 import Line from "../Components/Line";
-
+import { getTodaySpecificFood } from "../../backend/api";
+import PlaceholderCalorieView from "../Components/PlaceholderCalorieView";
+import { useEffect } from "react";
 
 
 
@@ -16,57 +18,87 @@ const HomeScreen = () => {
     const [lunch, setLunch] = useState([]);
     const [dinner, setDinner] = useState([]);
     const [snacks, setSnacks] = useState([]);
+    const [isLoading, setLoading] = useState(true);
+
+    useEffect(() => {
+      setLoading(true);
+      setBreakfast(getTodaySpecificFood('breakfast'));
+      setLunch(getTodaySpecificFood('lunch'));
+      setDinner(getTodaySpecificFood('dinner'));
+      setSnacks(getTodaySpecificFood('snacks'));
+      setLoading(false);
+    }, [])
 
 
 
-    const backgroundStyle = {
+
+  const backgroundStyle = {
       backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     };
   return (
     <SafeAreaView style={[backgroundStyle, {height: '100%'}]}>
+      <View style={{flex: 4}}>
+        <ScrollView style={styles.ScrollViewStyle}>
+          <View style={styles.CommonViewStyling}>
+            <Text style={[isDarkMode ? styles.DarkFont : styles.LightFont, styles.title]}>Breakfast</Text>
+            {/* This is where we will pull from VM to find any Breakfast Foods */}
+            <>
+            {isLoading ? <></> : breakfast.length === 0 && <PlaceholderCalorieView/> ||
+            breakfast.length !== 0 && breakfast.map((food, index) => {
+              return (
+              <View key={index} style={{flexDirection: 'row'}}>
+                <Text style={[styles.name, isDarkMode ? styles.DarkFont : styles.LightFont, styles.foodName]}>{food.name}: </Text>
+                <Text style={isDarkMode ? styles.DarkFont : styles.LightFont}> {food.calories}</Text>
+              </View>
+              )
+          })}
+</>
+          </View>
 
-      <ScrollView style={styles.ScrollViewStyle}>
-        <View style={styles.CommonViewStyling}>
-          <Text style={isDarkMode ? styles.DarkFont : styles.LightFont}>Breakfast</Text>
-          {/* This is where we will pull from VM to find any Breakfast Foods */}
-          <>
-           {breakfast.length === 0 && <Text style={isDarkMode ? styles.DarkFont : styles.LightFont}> YEET </Text>
-           }
-          </>
+          <Line/>
 
-        </View>
-
-        <Line/>
-
-        <View style={styles.CommonViewStyling}>
-          <Text style={isDarkMode ? styles.DarkFont : styles.LightFont}>Lunch</Text>
-          {/* This is where we will pull from VM to find any Lunch Foods */}
-
-        </View>
-        <Line/>
-
-
-
-        <View style={styles.CommonViewStyling}>
-          <Text style={isDarkMode ? styles.DarkFont : styles.LightFont}>Dinner</Text>
-          {/* This is where we will pull from VM to find any Dinner Foods */}
-
-        </View>
-        <Line/>
+          <View style={styles.CommonViewStyling}>
+            <Text style={[isDarkMode ? styles.DarkFont : styles.LightFont, styles.title]}>Lunch</Text>
+            {/* This is where we will pull from VM to find any Lunch Foods */}
+            <>
+            {lunch.length === 0  && <PlaceholderCalorieView/>}
+            </>
 
 
-        <View style={styles.CommonViewStyling}>
-          <Text style={isDarkMode ? styles.DarkFont : styles.LightFont}>Snacks</Text>
-          {/* This is where we will pull from VM to find any snacks */}
-        </View>
-        <Line/>
+
+          </View>
+          <Line/>
 
 
-      </ScrollView>
-      
-      
 
-      <View style={styles.ProgressBar}>
+          <View style={styles.CommonViewStyling}>
+            <Text style={[isDarkMode ? styles.DarkFont : styles.LightFont, styles.title]}>Dinner</Text>
+            {/* This is where we will pull from VM to find any Dinner Foods */}
+
+            <>
+            {dinner.length === 0  && <PlaceholderCalorieView/>}
+            </>
+
+          </View>
+          <Line/>
+
+
+          <View style={styles.CommonViewStyling}>
+            <Text style={[isDarkMode ? styles.DarkFont : styles.LightFont, styles.title]}>Snacks</Text>
+            {/* This is where we will pull from VM to find any snacks */}
+
+            <>
+            {snacks.length === 0  && <PlaceholderCalorieView/>}
+            </>
+
+          </View>
+          <Line/>
+
+
+        </ScrollView>
+      </View> 
+
+      <View style={[styles.ProgressBar, {flex: 0}]}>
         <Progress.Bar progress={0.3} width = {(4 * Dimensions.get('window').width) / 5} height={20}/>
         <Text style={isDarkMode ? styles.DarkFont : styles.LightFont}> 180/2000 Calories </Text>
       </View>
@@ -79,9 +111,6 @@ const styles = StyleSheet.create({
   ProgressBar: {
     alignSelf: 'center',
     alignItems: 'center',
-    position: "absolute",
-    padding: 8,
-    bottom: 8
   },
 
   DarkFont: {
@@ -104,9 +133,16 @@ const styles = StyleSheet.create({
   CommonViewStyling: {
     marginBottom: "15%",
     minHeight: "15%",
-    maxHeight: "25%",
-  }
+  },
 
+  title: {
+    fontSize: 24,
+    marginBottom: 4,
+  },
+
+  foodName: {
+    fontSize: 28,
+  }
 
 });
 

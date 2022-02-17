@@ -34,6 +34,22 @@ const getToday = () => {
   return result;
 }
 
+const getTodaySpecificFood = (specificFood) => {
+  let today = getToday();
+  var result = [];
+
+
+  for (let i = 0; i < today.food.length; i++) {
+    if (today.food[i].category === specificFood)
+    {
+      result.push(today.food[i]);
+    }
+  }
+  return result;
+}
+
+
+
 /**
  * Returns an object with the given date's data (results may be null, you should check for that before blindly using)
  * @param {*} _date Date to get info for
@@ -55,7 +71,8 @@ const getAllByDate = (_date) => {
  * Adds a food item for a given date
  */
 const addFood = (_name, _calories, _category) => {
-  let today = new Date().setHours(0, 0, 0, 0);
+  let today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   realm.write(() => {
     const addedFood = realm.create('Food', {
@@ -135,4 +152,6 @@ export {
   getAllByDate,
   changeToday,
   addFood,
+  getTodaySpecificFood,
+
 }
