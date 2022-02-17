@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, Text, } from 'react-native';
-import { addFood } from '../../backend/api';
 import Line from './Line';
 
-const PlaceholderCalorieView = () => {
+const PlaceholderCalorieView = ({onAddItem}) => {
     return (
-        <View style={styles.PlaceHolderView} onStartShouldSetResponder={() => addFood("Test", 200, "breakfast")}>
+        <View style={styles.PlaceHolderView} onStartShouldSetResponder={() => onAddItem({name: "Yeet", calories: 200, category: "breakfast"})}>
             <Text style={styles.placeholderText}>Click Here to create food item</Text>
             <Line />
         </View>
@@ -17,7 +16,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginLeft: 8,
         marginBottom: 4,
-        color: 'white'
+        color: '#cbdccb',
     },
 
     PlaceHolderView: {

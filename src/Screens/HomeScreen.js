@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Colors } from "react-native/Libraries/NewAppScreen";
-import { Text, useColorScheme, View, ScrollView } from "react-native";
+import { Text, useColorScheme, View, ScrollView, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Progress from 'react-native-progress';
 import { Dimensions, StyleSheet, } from 'react-native';
-import Line from "../Components/Line";
 import { getTodaySpecificFood } from "../../backend/api";
 import PlaceholderCalorieView from "../Components/PlaceholderCalorieView";
 import { useEffect } from "react";
-import { Swipeable } from "react-native-gesture-handler";
+import CalorieView from "../Components/CalorieView";
+import { addFood } from '../../backend/api';
 
 
 
@@ -35,7 +35,20 @@ const HomeScreen = () => {
     }, [])
 
 
+    const updateBreakfast = food => {
+      addFood(food.name, food.calories, food.category);
+      setBreakfast([...breakfast, food]);
+    }
 
+    const updateLunch = food => {
+      addFood(food.name, food.calories, food.category);
+      setLunch([...lunch, food]);
+    }
+
+    const updateDinner = food => {
+      addFood(food.name, food.calories, food.category);
+      setDinner([...dinner, food]);
+    }
 
   const backgroundStyle = {
       backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -56,48 +69,53 @@ const HomeScreen = () => {
             bottom: 0,
             right: SPACING_FOR_CARD_INSET
           }}
-          contentContainerStyle={{ // contentInset alternative for Android
-            paddingHorizontal: Platform.OS === 'android' ? SPACING_FOR_CARD_INSET : 0// Horizontal spacing before and after the ScrollView
+          contentContainerStyle={{
+            paddingHorizontal: Platform.OS === 'android' ? SPACING_FOR_CARD_INSET : 0
           }}
           >
           <View style={[styles.BreakfastCard, styles.CommonCard]}>
             <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold', marginBottom: 8,}}> Breakfast </Text>
             <ScrollView>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-              <PlaceholderCalorieView/>
-
+              {isLoading ? <></> :
+                breakfast.map((food, index) => {
+                  return (
+                    <CalorieView key={index} text={food.name} calories={food.calories} time={food.category}/>
+                  );
+                })
+              }
+              <PlaceholderCalorieView onAddItem={updateBreakfast}/>
             </ScrollView>
+            <Button style={{flex: 1}} title="Click to add Food"></Button>
+
           </View> 
           <View style={[styles.LunchCard, styles.CommonCard]}>
             <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold'}}> Lunch </Text>
+            <ScrollView>
+              {isLoading ? <></> :
+                lunch.map((food, index) => {
+                  return (
+                    <CalorieView key={index} text={food.name} calories={food.calories} time={food.category}/>
+                  );
+                })
+              }
+              <PlaceholderCalorieView onAddItem={updateLunch}/>
+            </ScrollView>
+            <Button style={{flex: 1}} title="Click to add Food"></Button>
+
           </View> 
           <View style={[styles.DinnerCard, styles.CommonCard]}>
             <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold'}}> Dinner </Text>
+            <ScrollView style={{flex: 3}}>
+              {isLoading ? <></> :
+                dinner.map((food, index) => {
+                  return (
+                    <CalorieView key={index} text={food.name} calories={food.calories} time={food.category}/>
+                  );
+                })
+              }
+              <PlaceholderCalorieView onAddItem={updateDinner}/>
+            </ScrollView>
+            <Button style={{flex: 1}} title="Click to add Food"></Button>
           </View> 
         </ScrollView>
       </View>
