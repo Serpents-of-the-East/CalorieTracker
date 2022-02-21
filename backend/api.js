@@ -48,6 +48,38 @@ const getTodaySpecificFood = (specificFood) => {
   return result;
 }
 
+const getGoal = () => {
+  let today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  let result = {}
+
+  result.day = realm.objects('Day').filtered("date = $0", today);
+  
+  
+  if (!result.day.length){
+    let yesterdayDate = new Date();
+    yesterdayDate.setDate(today.getDate() - 1)
+
+    const yesterday = realm.objects('Day').filtered("date = $0", yesterdayDate);
+    realm.write(() => {
+      const day = realm.create('Day', {
+        date: today,
+        goal: yesterday.length ? yesterday[0].goal : 2000,
+      })
+      result.day = day
+    })
+  }
+  else{
+    result.day = result.day[0]
+
+  }
+
+  return result.day.goal;
+
+}
+
+
 
 
 /**
@@ -153,5 +185,5 @@ export {
   changeToday,
   addFood,
   getTodaySpecificFood,
-
+  getGoal,
 }

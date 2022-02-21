@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Colors } from "react-native/Libraries/NewAppScreen";
-import { Text, useColorScheme, View, ScrollView, Button } from "react-native";
+import { Text, useColorScheme, View, ScrollView, Button, TouchableWithoutFeedback } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Progress from 'react-native-progress';
 import { Dimensions, StyleSheet, } from 'react-native';
-import { getTodaySpecificFood } from "../../backend/api";
+import { getGoal, getTodaySpecificFood } from "../../backend/api";
 import PlaceholderCalorieView from "../Components/PlaceholderCalorieView";
-import { useEffect } from "react";
 import CalorieView from "../Components/CalorieView";
 import { addFood } from '../../backend/api';
+import KeyboardAvoidingView from "react-native/Libraries/Components/Keyboard/KeyboardAvoidingView";
 
 
 
@@ -17,38 +17,74 @@ const HomeScreen = () => {
     const CARD_WIDTH =  Dimensions.get('window').width * 0.85;
     const CARD_HEIGHT = Dimensions.get('window').height * 0.7;
     const SPACING_FOR_CARD_INSET = Dimensions.get('window').width * 0.1 - 10
+
+
+    const [calories, setCalories] = useState(0);
+    const [calorieGoal, setCalorieGoal] = useState(getGoal());
+
+    const [isLoading, setLoading] = useState(true);
+    const lunchScroll = useRef();
+    const dinnerScroll = useRef();
+
+    const [ isEditing, setIsEditing ] = useState({
+      breakfast: false,
+      lunch: false,
+      dinner: false,
+    });
+
+    const [ foods, setFoods ] = useState({
+      breakfast: [],
+      lunch: [],
+      dinner: [],
+      snacks: [],
+    })
+
+    const endEditing = () => {
+      setIsEditing({
+        breakfast: false,
+        lunch: false,
+        dinner: false,
+      })
+    }
     
 
-    const [breakfast, setBreakfast] = useState([]);
-    const [lunch, setLunch] = useState([]);
-    const [dinner, setDinner] = useState([]);
-    const [snacks, setSnacks] = useState([]);
-    const [isLoading, setLoading] = useState(true);
+    const changeEditing = (mealType, value) => {
+      setIsEditing({...isEditing, [mealType]: value})
+    }
 
     useEffect(() => {
       setLoading(true);
-      setBreakfast(getTodaySpecificFood('breakfast'));
-      setLunch(getTodaySpecificFood('lunch'));
-      setDinner(getTodaySpecificFood('dinner'));
-      setSnacks(getTodaySpecificFood('snacks'));
+      const breakfast = getTodaySpecificFood('breakfast');
+      const lunch = getTodaySpecificFood('lunch');
+      const dinner = getTodaySpecificFood('dinner');
+      const snacks = getTodaySpecificFood('snacks');
+
+      tempCalorieAmount = 0;
+
+      const addSection = section => {
+        section.map(calorieAmount => {
+          tempCalorieAmount += calorieAmount.calories;
+        })
+      }
+
+      addSection(breakfast);
+      addSection(lunch);
+      addSection(dinner);
+
+      setCalories(tempCalorieAmount);
+
+      setFoods({ breakfast, lunch, dinner, snacks })
+
       setLoading(false);
     }, [])
 
-
-    const updateBreakfast = food => {
+    const updateMealType = food => {
       addFood(food.name, food.calories, food.category);
-      setBreakfast([...breakfast, food]);
+      setFoods({...foods, [food.category]: [...foods[food.category], food]})
+      setCalories(calories + Number.parseFloat(food.calories))
     }
 
-    const updateLunch = food => {
-      addFood(food.name, food.calories, food.category);
-      setLunch([...lunch, food]);
-    }
-
-    const updateDinner = food => {
-      addFood(food.name, food.calories, food.category);
-      setDinner([...dinner, food]);
-    }
+    
 
   const backgroundStyle = {
       backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -56,6 +92,8 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={[backgroundStyle, {height: '100%'}]}>
       <View style={{flex: 4}}>
+      <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "position" : "height"}>
         <ScrollView 
           horizontal={true} 
           pagingEnabled={true}
@@ -73,56 +111,76 @@ const HomeScreen = () => {
             paddingHorizontal: Platform.OS === 'android' ? SPACING_FOR_CARD_INSET : 0
           }}
           >
+          
           <View style={[styles.BreakfastCard, styles.CommonCard]}>
             <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold', marginBottom: 8,}}> Breakfast </Text>
-            <ScrollView>
+            <ScrollView ref={ref => { scrollView = ref }}>
               {isLoading ? <></> :
-                breakfast.map((food, index) => {
+                foods.breakfast.map((food, index) => {
                   return (
                     <CalorieView key={index} text={food.name} calories={food.calories} time={food.category}/>
                   );
                 })
               }
-              <PlaceholderCalorieView onAddItem={updateBreakfast}/>
+              {isEditing.breakfast ? <PlaceholderCalorieView onAddItem={updateMealType} mealType='breakfast' endEdit={endEditing}/> : null}
             </ScrollView>
-            <Button style={{flex: 1}} title="Click to add Food"></Button>
+            <View style={{width: '100%', alignItems: 'flex-start'}}> 
+              <Button title="Click to add Food" onPress={() => {
+                scrollView.scrollToEnd();
+                changeEditing('breakfast', true)
+
+              }}></Button>
+            </View>
 
           </View> 
           <View style={[styles.LunchCard, styles.CommonCard]}>
             <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold'}}> Lunch </Text>
-            <ScrollView>
+            <ScrollView ref={lunchScroll}>
               {isLoading ? <></> :
-                lunch.map((food, index) => {
+                foods.lunch.map((food, index) => {
                   return (
                     <CalorieView key={index} text={food.name} calories={food.calories} time={food.category}/>
                   );
                 })
               }
-              <PlaceholderCalorieView onAddItem={updateLunch}/>
+              {isEditing.lunch ? <PlaceholderCalorieView onAddItem={updateMealType} mealType='lunch' endEdit={endEditing}/> : null}
             </ScrollView>
-            <Button style={{flex: 1}} title="Click to add Food"></Button>
+            <View style={{justifyContent: 'flex-start', width: '100%', alignItems: 'flex-start'}}> 
+              <Button title="Click to add Food" style={{with: '100%'}} onPress={() => {
+                lunchScroll.current.scrollToEnd();
+                changeEditing('lunch', true)
+              }}></Button>
+            </View>
 
           </View> 
           <View style={[styles.DinnerCard, styles.CommonCard]}>
             <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold'}}> Dinner </Text>
-            <ScrollView style={{flex: 3}}>
+            <ScrollView style={{flex: 3}} ref={dinnerScroll}>
               {isLoading ? <></> :
-                dinner.map((food, index) => {
+                foods.dinner.map((food, index) => {
                   return (
                     <CalorieView key={index} text={food.name} calories={food.calories} time={food.category}/>
                   );
                 })
               }
-              <PlaceholderCalorieView onAddItem={updateDinner}/>
-            </ScrollView>
-            <Button style={{flex: 1}} title="Click to add Food"></Button>
+              {isEditing.dinner ? <PlaceholderCalorieView onAddItem={updateMealType} mealType='dinner' endEdit={endEditing}/> : null}
+            </ScrollView >
+            <View style={{justifyContent: 'flex-start', width: '100%', alignItems: 'flex-start'}}> 
+              <Button title="Click to add Food" onPress={() => {
+                dinnerScroll.current.scrollToEnd();
+                changeEditing('dinner', true)
+
+              }}></Button>
+            </View>
           </View> 
         </ScrollView>
-      </View>
+
+          </KeyboardAvoidingView>
+        </View>
 
       <View style={[styles.ProgressBar, {flex: 0}]}>
-        <Progress.Bar progress={0.3} width = {(4 * Dimensions.get('window').width) / 5} height={20}/>
-        <Text style={isDarkMode ? styles.DarkFont : styles.LightFont}> 180/2000 Calories </Text>
+        <Progress.Bar progress={calories / calorieGoal} width = {(4 * Dimensions.get('window').width) / 5} height={20}/>
+        <Text style={isDarkMode ? styles.DarkFont : styles.LightFont}> {calories.toString()}/2000 Calories </Text>
       </View>
 
     </SafeAreaView>

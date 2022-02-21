@@ -8,7 +8,6 @@ import CalendarScreen from './src/Screens/CalendarScreen';
 import HomeScreen from './src/Screens/HomeScreen';
 import SettingsScreen from './src/Screens/SettingsScreen';
 
-
 const Tab = createBottomTabNavigator();
 
 
@@ -27,9 +26,9 @@ const App = () => {
           tabBarStyle: { backgroundColor: isDarkMode ? Colors.darker : Colors.lighter, color: 'white' },
           headerShown: false,
         }}>
-            <Tab.Screen name="Home" component={HomeScreen} />
-            <Tab.Screen name="Calendar" component={CalendarScreen} />
-            <Tab.Screen name="Settings" component={SettingsScreen} />
+          <Tab.Screen name="Home" component={HomeScreen}/>
+          <Tab.Screen name="Calendar" component={CalendarScreen} />
+          <Tab.Screen name="Settings" component={SettingsScreen} />
         </Tab.Navigator>
         
     </NavigationContainer>
