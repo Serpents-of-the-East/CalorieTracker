@@ -180,7 +180,7 @@ const HomeScreen = () => {
 
       <View style={[styles.ProgressBar, {flex: 0}]}>
         <Progress.Bar progress={calories / calorieGoal} width = {(4 * Dimensions.get('window').width) / 5} height={20}/>
-        <Text style={isDarkMode ? styles.DarkFont : styles.LightFont}> {calories.toString()}/2000 Calories </Text>
+        <Text style={isDarkMode ? styles.DarkFont : styles.LightFont}> {calories.toString()}/{calorieGoal} Calories </Text>
       </View>
 
     </SafeAreaView>
