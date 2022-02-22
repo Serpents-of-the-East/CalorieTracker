@@ -9,6 +9,9 @@ import PlaceholderCalorieView from "../Components/PlaceholderCalorieView";
 import CalorieView from "../Components/CalorieView";
 import { addFood } from '../../backend/api';
 import KeyboardAvoidingView from "react-native/Libraries/Components/Keyboard/KeyboardAvoidingView";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCab, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 
 
@@ -124,13 +127,15 @@ const HomeScreen = () => {
               }
               {isEditing.breakfast ? <PlaceholderCalorieView onAddItem={updateMealType} mealType='breakfast' endEdit={endEditing}/> : null}
             </ScrollView>
-            <View style={{width: '100%', alignItems: 'flex-start'}}> 
-              <Button title="Click to add Food" onPress={() => {
-                scrollView.scrollToEnd();
-                changeEditing('breakfast', true)
-                
-              }} color='white' ></Button>
-            </View>
+            <TouchableOpacity onPress={() => {
+                  scrollView.scrollToEnd();
+                  changeEditing('breakfast', true)                
+                }}>
+              <View style={{width: '100%', alignItems: 'flex-start', flexDirection: 'row'}}> 
+                <FontAwesomeIcon icon= { faCirclePlus } style={{color: 'white', marginTop: 8}} size={24}/>
+                <Button title="Click to add Food"  color='white' ></Button>
+              </View>
+            </TouchableOpacity>
 
           </View> 
           <View style={[styles.LunchCard, styles.CommonCard]}>
@@ -145,12 +150,15 @@ const HomeScreen = () => {
               }
               {isEditing.lunch ? <PlaceholderCalorieView onAddItem={updateMealType} mealType='lunch' endEdit={endEditing}/> : null}
             </ScrollView>
-            <View style={{justifyContent: 'flex-start', width: '100%', alignItems: 'flex-start'}}> 
-              <Button title="Click to add Food" style={{with: '100%'}} onPress={() => {
-                lunchScroll.current.scrollToEnd();
-                changeEditing('lunch', true)
-              }} color='white'></Button>
-            </View>
+            <TouchableOpacity onPress={() => {
+                  lunchScroll.current.scrollToEnd();
+                  changeEditing('lunch', true)                
+                }}>
+              <View style={{width: '100%', alignItems: 'flex-start', flexDirection: 'row'}}> 
+                <FontAwesomeIcon icon= { faCirclePlus } style={{color: 'white', marginTop: 8}} size={24}/>
+                <Button title="Click to add Food"  color='white' ></Button>
+              </View>
+            </TouchableOpacity>
 
           </View> 
           <View style={[styles.DinnerCard, styles.CommonCard]}>
@@ -165,13 +173,15 @@ const HomeScreen = () => {
               }
               {isEditing.dinner ? <PlaceholderCalorieView onAddItem={updateMealType} mealType='dinner' endEdit={endEditing}/> : null}
             </ScrollView >
-            <View style={{justifyContent: 'flex-start', width: '100%', alignItems: 'flex-start'}}> 
-              <Button title="Click to add Food" onPress={() => {
-                dinnerScroll.current.scrollToEnd();
-                changeEditing('dinner', true)
-
-              }} color='white'></Button>
-            </View>
+            <TouchableOpacity onPress={() => {
+                  dinnerScroll.current.scrollToEnd();
+                  changeEditing('dinner', true)                
+                }}>
+              <View style={{width: '100%', alignItems: 'flex-start', flexDirection: 'row'}}> 
+                <FontAwesomeIcon icon= { faCirclePlus } style={{color: 'white', marginTop: 8}} size={24}/>
+                <Button title="Click to add Food"  color='white' ></Button>
+              </View>
+            </TouchableOpacity>
           </View> 
         </ScrollView>
 
