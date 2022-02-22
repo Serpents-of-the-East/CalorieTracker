@@ -24,13 +24,16 @@ const getMonthData = (month, year) => {
       switch(_status.status){
         case('over'):
           dotColor = 'red';
+          break;
         case('under'):
           dotColor = 'green';
+          break;
         default:
           dotColor = 'grey';
+          break;
       }
 
-      console.log(JSON.stringify(_status));
+      //console.log(JSON.stringify(_status.status));
       newMonthData = {...newMonthData, [_date.toISOString().split('T')[0]]: _result};  
       markedDatesData = {...markedDatesData, [_date.toISOString().split('T')[0]]: {marked: true, dotColor}}    
     }
