@@ -12,7 +12,7 @@ import KeyboardAvoidingView from "react-native/Libraries/Components/Keyboard/Key
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCab, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
+import { useIsFocused } from '@react-navigation/native';
 
 
 const HomeScreen = () => {
@@ -20,7 +20,7 @@ const HomeScreen = () => {
     const CARD_WIDTH =  Dimensions.get('window').width * 0.85;
     const CARD_HEIGHT = Dimensions.get('window').height * 0.7;
     const SPACING_FOR_CARD_INSET = Dimensions.get('window').width * 0.1 - 10
-
+    const isFocused = useIsFocused();
 
     const [calories, setCalories] = useState(0);
     const [calorieGoal, setCalorieGoal] = useState(getGoal());
@@ -77,15 +77,16 @@ const HomeScreen = () => {
 
       setCalories(tempCalorieAmount);
 
-      console.log(calories)
-      console.log(Number.parseFloat(calorieGoal));
-      console.log(calories > calorieGoal)
-
       if (tempCalorieAmount > Number.parseFloat(calorieGoal)) setIsOverGoal(true);
       setFoods({ breakfast, lunch, dinner, snacks })
 
       setLoading(false);
     }, [])
+
+    useEffect(() => {
+      setCalorieGoal(getGoal());
+
+    }, [isFocused])
 
     const updateMealType = food => {
       addFood(food.name, food.calories, food.category);
@@ -124,7 +125,7 @@ const HomeScreen = () => {
           >
           
           <View style={[styles.BreakfastCard, styles.CommonCard]}>
-            <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold', marginBottom: 8,}}> Breakfast </Text>
+            <Text style={{fontSize: 32, color: 'white', fontWeight: 'bold', marginBottom: 32,}}> Breakfast </Text>
             <ScrollView ref={ref => { scrollView = ref }}>
               {isLoading ? <></> :
                 foods.breakfast.map((food, index) => {
@@ -147,7 +148,7 @@ const HomeScreen = () => {
 
           </View> 
           <View style={[styles.LunchCard, styles.CommonCard]}>
-            <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold'}}> Lunch </Text>
+            <Text style={{fontSize: 32, color: 'white', fontWeight: 'bold', marginBottom: 32}}> Lunch </Text>
             <ScrollView ref={lunchScroll}>
               {isLoading ? <></> :
                 foods.lunch.map((food, index) => {
@@ -170,7 +171,7 @@ const HomeScreen = () => {
 
           </View> 
           <View style={[styles.DinnerCard, styles.CommonCard]}>
-            <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold'}}> Dinner </Text>
+            <Text style={{fontSize: 32, color: 'white', fontWeight: 'bold', marginBottom: 32}}> Dinner </Text>
             <ScrollView style={{flex: 3}} ref={dinnerScroll}>
               {isLoading ? <></> :
                 foods.dinner.map((food, index) => {
