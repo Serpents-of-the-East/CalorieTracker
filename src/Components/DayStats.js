@@ -8,24 +8,18 @@ const DayStats = (props) => {
   const {day, food, weight} = props.dayData;
 
   const foundDateName = day?.date?.toString();
-
-  if (!foundDateName){
-    return (
-      <View>
-        <Text>Stats For</Text>
-        <Text>{props.date}</Text>
-        <Text>No data was found</Text>
-      </View>
-    );
-  }
-
-  return(
-    <View>
-      <Text>Stats For</Text>
+  return (
+    <View style={{ alignItems: 'center' }}>
+      <Text style={{ fontSize: 24 }}>Stats For</Text>
       <Text>{props.date}</Text>
+      {!foundDateName ? 
+      <Text>No data was found</Text>
+      :
       <Text>Goal: {day.goal}</Text>
+      }
     </View>
-  )
-}
+  );
+
+  }
 
 export default DayStats;

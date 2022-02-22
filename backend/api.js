@@ -127,7 +127,7 @@ const getStatusByDate = (_date) => {
     totalCalories += food.calories;
   }
 
-  if (totalCalories > dayInfo.goal){
+  if (totalCalories > dayInfo[0].goal){
     return {status: 'over'};
   }
 
