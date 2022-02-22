@@ -24,6 +24,7 @@ const HomeScreen = () => {
 
     const [calories, setCalories] = useState(0);
     const [calorieGoal, setCalorieGoal] = useState(getGoal());
+    const [isOverGoal, setIsOverGoal] = useState(false);
 
     const [isLoading, setLoading] = useState(true);
     const lunchScroll = useRef();
@@ -76,6 +77,11 @@ const HomeScreen = () => {
 
       setCalories(tempCalorieAmount);
 
+      console.log(calories)
+      console.log(Number.parseFloat(calorieGoal));
+      console.log(calories > calorieGoal)
+
+      if (tempCalorieAmount > Number.parseFloat(calorieGoal)) setIsOverGoal(true);
       setFoods({ breakfast, lunch, dinner, snacks })
 
       setLoading(false);
@@ -85,6 +91,8 @@ const HomeScreen = () => {
       addFood(food.name, food.calories, food.category);
       setFoods({...foods, [food.category]: [...foods[food.category], food]})
       setCalories(calories + Number.parseFloat(food.calories))
+      if (calories + Number.parseFloat(food.calories) > calorieGoal) setIsOverGoal(true)
+      else setIsOverGoal(false);
     }
 
     
@@ -189,7 +197,8 @@ const HomeScreen = () => {
         </View>
 
       <View style={[styles.ProgressBar, {flex: 0}]}>
-        <Progress.Bar progress={calories / calorieGoal} width = {(4 * Dimensions.get('window').width) / 5} height={20}/>
+        <Progress.Bar progress={calories / calorieGoal} width = {(4 * Dimensions.get('window').width) / 5} height={20}
+        color={isOverGoal ? '#ff0000' : '#00ff00'}/>
         <Text style={isDarkMode ? styles.DarkFont : styles.LightFont}> {calories.toString()}/{calorieGoal} Calories </Text>
       </View>
 
@@ -209,9 +218,7 @@ const styles = StyleSheet.create({
 
 
   BreakfastCard: {
-
     backgroundColor: '#FF7F7F',
-
   },
 
   LunchCard: {
