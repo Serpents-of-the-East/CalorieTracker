@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Colors } from "react-native/Libraries/NewAppScreen";
-import { SafeAreaView, Text, useColorScheme, View, StyleSheet, Button } from "react-native";
+import { Text, useColorScheme, View, StyleSheet, Button } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { getToday, changeToday } from "../../backend/api";
-import { TextInput } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 
 
 const SettingsScreen = () => {
@@ -26,7 +27,8 @@ const SettingsScreen = () => {
       },
       text: {
         color: isDarkMode ? 'white' : 'black',
-        fontSize: 32,
+        fontSize: 24,
+        textAlignVertical: 'center',
         textAlign: 'center',
       }
     });
@@ -38,15 +40,19 @@ const SettingsScreen = () => {
     };
   return (
     <SafeAreaView style={[backgroundStyle, {height: '100%'}]}>
-      <Text style={styles.text}>{todayCalorieGoal}</Text>
+      <ScrollView>
+          <Text style={styles.text}>Set Calorie Goal: </Text>
 
-      <TextInput
-        value={calorieGoal.toString()}
-        onChangeText={calorieGoal => setCalorieGoal(calorieGoal)}
-        placeholder="Enter your calorie goal"  
-        style={styles.input}
-        keyboardType="numeric"
-      />
+          <TextInput
+            value={calorieGoal.toString()}
+            onChangeText={calorieGoal => setCalorieGoal(calorieGoal)}
+            placeholder="Enter your calorie goal"  
+            style={styles.input}
+            keyboardType="numeric"
+          />
+      </ScrollView>
+
+
 
 
       <Button 

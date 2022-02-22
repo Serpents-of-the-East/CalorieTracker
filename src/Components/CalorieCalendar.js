@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Calendar } from "react-native-calendars";
+import { Colors } from "react-native/Libraries/NewAppScreen";
+
 import { getAllByDate, getStatusByDate, getToday } from "../../backend/api";
 import DayStats from "./DayStats";
-import { View } from "react-native";
+import { View, useColorScheme, StyleSheet } from "react-native";
 
 
 const getMonthData = (month, year) => {
   const numberOfDays = new Date(year, month+1, 0).getDate();
+
 
   let newMonthData = {};
   let markedDatesData = {};
@@ -49,6 +52,23 @@ const CalorieCalendar = () => {
   const [ dayData, setDayData ] = useState(getAllByDate(today));
   const [ currentDate, setCurrentDate ] = useState(today.toISOString().split('T')[0]);
   const [ markedDatesData, setMarkedDatesData ] = useState(getMonthData(today.getMonth(), today.getFullYear()));
+  const isDarkMode = useColorScheme() === 'dark';
+  const [{key, theme}, setTheme] = useState({key: 'dark', theme: {
+          calendarBackground: isDarkMode ? Colors.darker : Colors.lighter,
+          dayTextColor: isDarkMode ? Colors.lighter : Colors.darker,
+          textColor: isDarkMode ? Colors.lighter : Colors.darker,
+          monthTextColor: isDarkMode ? Colors.lighter : Colors.darker,
+  }})
+  
+  useEffect(() => {
+    setTheme({key:isDarkMode ? 'dark' : 'light', theme: {
+      calendarBackground: isDarkMode ? Colors.darker : Colors.lighter,
+      dayTextColor: isDarkMode ? Colors.lighter : Colors.darker,
+      textColor: isDarkMode ? Colors.lighter : Colors.darker,
+      monthTextColor: isDarkMode ? Colors.lighter : Colors.darker,
+    }})
+  }, [isDarkMode])
+
 
   const onDayPress = date => {
     setCurrentDate(date.dateString);
@@ -61,6 +81,7 @@ const CalorieCalendar = () => {
   return (
     <View>
       <Calendar
+        key={key}
         markedDates={{
           ...markedDatesData,
           [currentDate]: {
@@ -69,6 +90,7 @@ const CalorieCalendar = () => {
           }
         }}
         onDayPress={onDayPress}
+        theme={theme}
       />
       <DayStats dayData={dayData} date={currentDate} />
     </View>
