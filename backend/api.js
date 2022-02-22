@@ -90,11 +90,16 @@ const getGoal = () => {
 const getAllByDate = (_date) => {
   _date.setHours(0, 0, 0, 0);
 
-  let result = {}
+  const result = {}
 
-  result.food = realm.objects('Food').filtered("date = $0", today);
-  result.weight = realm.objects('Weight').filtered("date = $0", today);
-  result.day = realm.objects('Day').filtered("date = $0", today);
+  const food = realm.objects('Food').filtered("date = $0", _date);
+  const weight = realm.objects('Weight').filtered("date = $0", _date);
+  const day = realm.objects('Day').filtered("date = $0", _date);
+
+  
+  result.food = food.length ? food[0] : {};
+  result.weight = weight.length ? weight[0] : {};
+  result.day = day.length ? day[0] : {};
 
   return result;
 }
@@ -171,7 +176,7 @@ const getStatusByDate = (_date) => {
     totalCalories += food.calories;
   }
 
-  if (totalCalories > dayInfo.goal){
+  if (totalCalories > dayInfo[0].goal){
     return {status: 'over'};
   }
 
