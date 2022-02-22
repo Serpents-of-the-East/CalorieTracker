@@ -128,8 +128,8 @@ const HomeScreen = () => {
               <Button title="Click to add Food" onPress={() => {
                 scrollView.scrollToEnd();
                 changeEditing('breakfast', true)
-
-              }}></Button>
+                
+              }} color='white' ></Button>
             </View>
 
           </View> 
@@ -149,7 +149,7 @@ const HomeScreen = () => {
               <Button title="Click to add Food" style={{with: '100%'}} onPress={() => {
                 lunchScroll.current.scrollToEnd();
                 changeEditing('lunch', true)
-              }}></Button>
+              }} color='white'></Button>
             </View>
 
           </View> 
@@ -170,7 +170,7 @@ const HomeScreen = () => {
                 dinnerScroll.current.scrollToEnd();
                 changeEditing('dinner', true)
 
-              }}></Button>
+              }} color='white'></Button>
             </View>
           </View> 
         </ScrollView>
