@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Calendar } from "react-native-calendars";
 import { Colors } from "react-native/Libraries/NewAppScreen";
-
+import * as Progress from 'react-native-progress';
 import { getAllByDate, getStatusByDate, getToday } from "../../backend/api";
 import DayStats from "./DayStats";
-import { View, useColorScheme, StyleSheet } from "react-native";
+import { View, useColorScheme, StyleSheet, Dimensions, Text } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 
 const getMonthData = (month, year) => {
@@ -53,18 +54,26 @@ const CalorieCalendar = () => {
   const [ currentDate, setCurrentDate ] = useState(today.toISOString().split('T')[0]);
   const [ markedDatesData, setMarkedDatesData ] = useState(getMonthData(today.getMonth(), today.getFullYear()));
   const isDarkMode = useColorScheme() === 'dark';
+  const [ totalCalories, setTotalCalories ] = useState(0);
   const [{key, theme}, setTheme] = useState({key: 'dark', theme: {
           calendarBackground: isDarkMode ? Colors.darker : Colors.lighter,
           dayTextColor: isDarkMode ? Colors.lighter : Colors.darker,
-          textColor: isDarkMode ? Colors.lighter : Colors.darker,
           monthTextColor: isDarkMode ? Colors.lighter : Colors.darker,
   }})
   
   useEffect(() => {
+    let calories = 0;
+
+    console.log(dayData.food);
+
+    setTotalCalories(calories);
+
+  }, [dayData])
+
+  useEffect(() => {
     setTheme({key:isDarkMode ? 'dark' : 'light', theme: {
       calendarBackground: isDarkMode ? Colors.darker : Colors.lighter,
       dayTextColor: isDarkMode ? Colors.lighter : Colors.darker,
-      textColor: isDarkMode ? Colors.lighter : Colors.darker,
       monthTextColor: isDarkMode ? Colors.lighter : Colors.darker,
     }})
   }, [isDarkMode])
@@ -92,9 +101,42 @@ const CalorieCalendar = () => {
         onDayPress={onDayPress}
         theme={theme}
       />
-      <DayStats dayData={dayData} date={currentDate} />
+      <View style={{height: '54%'}}>
+        <ScrollView>
+          <DayStats dayData={dayData} date={currentDate} />
+        </ScrollView>
+
+        <View style={[styles.ProgressBar]}>
+          <Progress.Bar progress={totalCalories / dayData.day.goal} width = {(4 * Dimensions.get('window').width) / 5} height={20}
+          />
+          <Text style={isDarkMode ? styles.DarkFont : styles.LightFont}> {totalCalories}/{dayData.day.goal} Calories </Text>
+        </View>
+      </View>
+
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+
+  ProgressBar: {
+    alignSelf: 'center',
+    alignItems: 'center',
+  },
+
+  DarkFont: {
+    color: "white",
+    fontSize: 18,
+    paddingTop: 8
+  },
+
+  LightFont: {
+    color: "black",
+    fontSize: 18,
+    paddingTop: 8
+  },
+
+});
+
 
 export default CalorieCalendar;

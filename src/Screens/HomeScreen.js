@@ -10,7 +10,7 @@ import CalorieView from "../Components/CalorieView";
 import { addFood } from '../../backend/api';
 import KeyboardAvoidingView from "react-native/Libraries/Components/Keyboard/KeyboardAvoidingView";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCab, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useIsFocused } from '@react-navigation/native';
 
