@@ -1,13 +1,16 @@
 import React from 'react';
 import { View, StyleSheet, Text, } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 import { addFood } from '../../backend/api';
 import Line from './Line';
 
 const CalorieView = (props) => {
     return (
-        <View style={styles.FoodView} onStartShouldSetResponder={() => console.log(props.text)}>
+        <View style={styles.FoodView} onStartShouldSetResponder={() => {
+            console.log(props.text)
+        }}>
             <View style={{flexDirection: "row"}}>
-                <Text style={[styles.foodText, {flex: 4}]}>{props.text}</Text>
+                <TextInput  style={[styles.foodText, {flex: 4}]}>{props.text}</TextInput>
                 <Text style={[styles.foodText, {flex: 1}]}>{props.calories}</Text>
             </View>
                 <Line />

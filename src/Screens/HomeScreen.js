@@ -140,9 +140,9 @@ const HomeScreen = () => {
                   scrollView.scrollToEnd();
                   changeEditing('breakfast', true)                
                 }}>
-              <View style={{width: '100%', alignItems: 'flex-start', flexDirection: 'row'}}> 
+              <View style={{width: '100%', alignItems: 'flex-start', flexDirection: 'row', paddingLeft: 4}}> 
                 <FontAwesomeIcon icon= { faCirclePlus } style={{color: 'white', marginTop: 8}} size={24}/>
-                <Button title="Click to add Food"  color='white' ></Button>
+                <Button title="Click to add Food"  color='white'></Button>
               </View>
             </TouchableOpacity>
 
@@ -163,7 +163,7 @@ const HomeScreen = () => {
                   lunchScroll.current.scrollToEnd();
                   changeEditing('lunch', true)                
                 }}>
-              <View style={{width: '100%', alignItems: 'flex-start', flexDirection: 'row'}}> 
+              <View style={{width: '100%', alignItems: 'flex-start', flexDirection: 'row', paddingLeft: 4}}> 
                 <FontAwesomeIcon icon= { faCirclePlus } style={{color: 'white', marginTop: 8}} size={24}/>
                 <Button title="Click to add Food"  color='white' ></Button>
               </View>
@@ -186,7 +186,7 @@ const HomeScreen = () => {
                   dinnerScroll.current.scrollToEnd();
                   changeEditing('dinner', true)                
                 }}>
-              <View style={{width: '100%', alignItems: 'flex-start', flexDirection: 'row'}}> 
+              <View style={{width: '100%', alignItems: 'flex-start', flexDirection: 'row', paddingLeft: 4}}> 
                 <FontAwesomeIcon icon= { faCirclePlus } style={{color: 'white', marginTop: 8}} size={24}/>
                 <Button title="Click to add Food"  color='white' ></Button>
               </View>
