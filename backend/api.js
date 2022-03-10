@@ -84,18 +84,25 @@ const getGoal = () => {
  * @param {*} _date Date to get calorie count for
  */
 
-const getCaloriesForDate = (_date) => {
+const getCaloriesForDate = (year, month, day) => {
   let result = {}
   let calories = 0;
+  let _date = new Date();
 
-  let date = new Date()
-  date.setFullYear(_date.getYear(), _date.getMonth(), _date.getDate())
-  console.log(_date.getYear());
-  console.log("JFDKLSJFIOPEU IOPRUEWOI FIODSFLKJDKLRU#IOKUFS DIOKFJL:DS F")
+  _date.setFullYear(year, month - 1, day)
+  _date.setHours(0, 0, 0, 0);
 
-  result.food = realm.objects('Food').filtered("date = $0", date);
-  result.weight = realm.objects('Weight').filtered("date = $0", date);
-  result.day = realm.objects('Day').filtered("date = $0", date);
+
+  result.food = realm.objects('Food').filtered("date = $0", _date);
+  result.weight = realm.objects('Weight').filtered("date = $0", _date);
+  result.day = realm.objects('Day').filtered("date = $0", _date);
+
+  console.log(result)
+
+  if (!result.day)
+  {
+    return 0;
+  }
 
   if (result.day.length){
     result.day = result.day[0]
@@ -118,7 +125,7 @@ const getCaloriesForDate = (_date) => {
  * @returns Object
  */
 const getAllByDate = (_date) => {
-  let date = new Date();
+  // let date = new Date();
   _date.setHours(0, 0, 0, 0);
 
   const result = {}

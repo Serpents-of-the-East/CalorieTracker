@@ -60,15 +60,11 @@ const CalorieCalendar = () => {
           textColor: isDarkMode ? Colors.lighter : Colors.darker,
           monthTextColor: isDarkMode ? Colors.lighter : Colors.darker,
   }})
+  const [isOverGoal, setIsOverGoal] = useState(false);
   
   useEffect(() => {
-    let _date = new Date();
     let splitDate = currentDate.split('-');
-    _date.setFullYear(currentDate[2], currentDate[1], currentDate[0])
-
-    
-    setTotalCalories(getCaloriesForDate(_date))
-  
+    setTotalCalories(getCaloriesForDate(splitDate[0], splitDate[1], splitDate[2]))
 
   }, [dayData])
 
@@ -112,8 +108,8 @@ const CalorieCalendar = () => {
         </ScrollView>
 
         <View style={[styles.ProgressBar]}>
-          <Progress.Bar progress={totalCalories ?? 0 / dayData?.day?.goal ?? 2000} width = {(4 * Dimensions.get('window').width) / 5} height={20}
-          />
+          <Progress.Bar progress={(totalCalories ?? 0) / (dayData?.day?.goal ?? 2000)} width = {(4 * Dimensions.get('window').width) / 5} height={20}
+          color={totalCalories > dayData?.day?.goal ? '#ff0000' : '#00ff00'}/>
           <Text style={isDarkMode ? styles.DarkFont : styles.LightFont}> {totalCalories ?? 0}/{dayData.day.goal ?? 2000} Calories </Text>
         </View>
       </View>
