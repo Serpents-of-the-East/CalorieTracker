@@ -60,7 +60,6 @@ const CalorieCalendar = () => {
           textColor: isDarkMode ? Colors.lighter : Colors.darker,
           monthTextColor: isDarkMode ? Colors.lighter : Colors.darker,
   }})
-  const [isOverGoal, setIsOverGoal] = useState(false);
   
   useEffect(() => {
     let splitDate = currentDate.split('-');

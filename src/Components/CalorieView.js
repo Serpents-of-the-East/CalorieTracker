@@ -7,7 +7,7 @@ import Line from './Line';
 const CalorieView = (props) => {
     return (
         <View style={styles.FoodView} onStartShouldSetResponder={() => {
-            console.log(props.text)
+            console.log(props.key)
         }}>
             <View style={{flexDirection: "row"}}>
                 <TextInput  style={[styles.foodText, {flex: 4}]}>{props.text}</TextInput>
